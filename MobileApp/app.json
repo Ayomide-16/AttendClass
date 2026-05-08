@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "AttendClass",
+    "slug": "attendclass-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.ayomide16.attendclass"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "modes": [
+            "peripheral",
+            "central"
+          ],
+          "bluetoothAlwaysPermission": "Allow AttendClass to use Bluetooth to check in at classroom devices."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow AttendClass to access your camera to scan classroom QR codes."
+        }
+      ]
+    ],
+    "scheme": "attendclass"
+  }
+}

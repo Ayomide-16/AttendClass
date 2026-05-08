@@ -44,3 +44,11 @@ fp.log
 .key/
 *.pem
 *.key
+
+# Mobile App (Expo/RN)
+MobileApp/.expo/
+MobileApp/android/
+MobileApp/ios/
+MobileApp/web-build/
+*.apk
+*.aab

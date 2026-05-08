@@ -5,6 +5,7 @@
 [![React](https://img.shields.io/badge/Frontend-TanStack_Start-blue.svg)](https://tanstack.com/start)
 [![Supabase](https://img.shields.io/badge/Backend-Supabase-green.svg)](https://supabase.com/)
 [![ESP32](https://img.shields.io/badge/Hardware-ESP32-red.svg)](https://www.espressif.com/en/products/socs/esp32)
+[![Build Android APK](https://github.com/Ayomide-16/AttendClass/actions/workflows/build-apk.yml/badge.svg)](https://github.com/Ayomide-16/AttendClass/actions/workflows/build-apk.yml)
 
 **AttendClass** is a modern, full-stack attendance solution that combines biometric hardware with a cloud-native web ecosystem. Designed for university environments, it ensures high-integrity attendance tracking via 2FA (RFID + Fingerprint) and proximity-aware QR/BLE flows.
 
@@ -42,7 +43,7 @@
 
 - `ESP32_Firmware/`: Core firmware and specialized libraries for the AttendESP device.
 - `WebApp/`: Modern TanStack Start web application and Supabase Edge Functions.
-- `MobileApp/`: (Under Development) React Native companion app.
+- `MobileApp/`: Expo-based React Native application for Android/iOS.
 
 ---
 
@@ -62,6 +63,18 @@
 3. **Run**:
    ```bash
    npm run dev
+   ```
+
+### 📱 Mobile App Setup
+1. **Environment**:
+   ```bash
+   cd MobileApp
+   npm install
+   ```
+2. **Build APK**: The app is configured to build automatically on GitHub Actions. You can download the latest `.apk` from the **Actions** tab.
+3. **Local Dev**:
+   ```bash
+   npx expo start
    ```
 
 ### 🔌 Hardware Setup

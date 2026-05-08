@@ -1,0 +1,45 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install dependencies
+        working-directory: ./MobileApp
+        run: |
+          npm install --legacy-peer-deps
+          npm install -g expo-cli
+
+      - name: Prebuild Expo
+        working-directory: ./MobileApp
+        run: npx expo prebuild --platform android --no-interactive
+
+      - name: Build Android Release
+        working-directory: ./MobileApp/android
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AttendClass-Mobile-APK
+          path: MobileApp/android/app/build/outputs/apk/release/*.apk
