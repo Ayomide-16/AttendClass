@@ -2,103 +2,92 @@
 
 <!-- ![AttendClass Banner](docs/banner.png) -->
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![React](https://img.shields.io/badge/Frontend-React-blue.svg)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/Frontend-TanStack_Start-blue.svg)](https://tanstack.com/start)
 [![Supabase](https://img.shields.io/badge/Backend-Supabase-green.svg)](https://supabase.com/)
 [![ESP32](https://img.shields.io/badge/Hardware-ESP32-red.svg)](https://www.espressif.com/en/products/socs/esp32)
 
-**AttendClass** is a state-of-the-art dual-architecture attendance system designed for modern university classrooms. It bridges the gap between physical classroom presence and digital record-keeping through custom ESP32 hardware and a robust web application ecosystem.
+**AttendClass** is a modern, full-stack attendance solution that combines biometric hardware with a cloud-native web ecosystem. Designed for university environments, it ensures high-integrity attendance tracking via 2FA (RFID + Fingerprint) and proximity-aware QR/BLE flows.
 
 ---
 
-## 🚀 Key Features
+## 🚀 System Architecture
 
-### 🛠️ Hardware (AttendESP)
-- **Biometric Security**: Strict 2FA check-in using **RFID** and **Fingerprint** verification.
-- **Proximity Detection**: Proximity-aware entry via **BLE** and **QR Codes**.
-- **Offline Resilience**: Automatic logging to **SD Card** ensures data integrity even during network outages.
-- **OLED Interface**: Real-time feedback and menu navigation on a SH1106 display.
+### 📟 AttendESP (Hardware)
+- **Offline-First**: Reliable attendance capture to SD Card via FreeRTOS background tasks.
+- **Biometric 2FA**: Strict verification using **MFRC522 RFID** and **Optical Fingerprint Sensors**.
+- **Cloud Sync**: Proprietary CSV streaming from ESP32 to Supabase Edge Functions.
+- **Smart UI**: Interactive SH1106 OLED display with an admin-driven menu system.
 
-### 🌐 Web Ecosystem (WebApp)
-- **Real-time Dashboard**: Live monitoring of classroom attendance for students, lecturers, and reps.
-- **Hybrid Backend**: Supports both local storage (JSON/SQLite) and cloud integration (**Supabase**).
-- **Secure Sync**: Proprietary HTTPS-based CSV streaming from hardware to cloud.
-- **Role-Based Access**: Specialized interfaces for Students, Lecturers, and Course Representatives.
+### 🌐 AttendClass Web (Software)
+- **TanStack Start**: Next-generation React framework for type-safe routing and SSR.
+- **Serverless Backend**: Powered entirely by **Supabase** (Postgres, Auth, and Deno Edge Functions).
+- **Real-time Engine**: Live updates for lecturers and students as attendance is marked.
+- **BLE Proximity**: Web-Bluetooth integration for secure, in-person check-ins.
+
+---
 
 ## 🛠️ Technology Stack
 
-### 📱 Frontend & Web
-- **React 18** + **TypeScript**
-- **TanStack Router** (File-based routing)
-- **Tailwind CSS** + **Shadcn UI** (Modern styling)
-- **Vite** (Next-gen frontend tooling)
-
-### ⚙️ Backend & Database
-- **Supabase** (Auth, Database, Storage)
-- **Node.js** + **Express** (Middleware sync API)
-- **JWT** (Secure authentication)
-
-### 📟 Embedded Systems (Hardware)
-- **ESP32** (Core microcontroller)
-- **FreeRTOS** (Dual-core task management)
-- **MFRC522** (RFID interface)
-- **Adafruit Fingerprint Sensor**
-- **SH1106** (OLED display controller)
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React 19, TypeScript, TanStack Router/Start, Tailwind CSS |
+| **Backend** | Supabase Edge Functions (Deno), Supabase Auth |
+| **Database** | PostgreSQL (Supabase) |
+| **Hardware** | ESP32, C++/Arduino, FreeRTOS |
+| **Connectivity** | Wi-Fi (HTTPS Sync), BLE (Proximity Check-in) |
 
 ---
 
 ## 📂 Repository Structure
 
-| Directory | Description |
-| :--- | :--- |
-| `ESP32_Firmware/` | ESP32 C++/Arduino firmware and libraries. |
-| `WebApp/` | TanStack-powered React frontend & Express backend. |
-| `MobileApp/` | (Work in Progress) Mobile companion application. |
+- `ESP32_Firmware/`: Core firmware and specialized libraries for the AttendESP device.
+- `WebApp/`: Modern TanStack Start web application and Supabase Edge Functions.
+- `MobileApp/`: (Under Development) React Native companion app.
 
 ---
 
 ## 🛠️ Getting Started
 
-### 🔌 Hardware Setup
-1. **Components**: ESP32, MFRC522 RFID, Adafruit Fingerprint Sensor, SD Module, SH1106 OLED.
-2. **Firmware**: Open `ESP32_Firmware/sketch_may3a.ino` in Arduino IDE or PlatformIO.
-3. **Libraries**: Install `MFRC522`, `Adafruit_Fingerprint`, `ArduinoJson`, `Adafruit_SH110X`.
-4. **Flash**: Update Wi-Fi/API credentials in the code and upload to your ESP32.
-
-### 💻 Web Application
-1. **Install**:
+### 💻 Web App Setup
+1. **Clone & Install**:
    ```bash
    cd WebApp
    npm install
    ```
-2. **Environment**: Configure `.env` with your Supabase credentials (see `.env.example`).
+2. **Environment**: Configure `WebApp/.env` with your Supabase credentials:
+   ```env
+   VITE_SUPABASE_URL=your_project_url
+   VITE_SUPABASE_ANON_KEY=your_anon_key
+   ```
 3. **Run**:
    ```bash
    npm run dev
    ```
-   - Frontend: `http://localhost:5173`
-   - Backend: `http://localhost:3002`
+
+### 🔌 Hardware Setup
+1. **Firmware**: Open `ESP32_Firmware/ESP32_Firmware.ino` in Arduino IDE or VS Code (PlatformIO).
+2. **Dependencies**: Install `MFRC522`, `Adafruit_Fingerprint`, `ArduinoJson`, `Adafruit_SH110X`.
+3. **Config**: Update `WIFI_SSID`, `WIFI_PASSWORD`, and `CLOUD_BASE_URL` in the source.
+4. **Flash**: Upload to your ESP32 Dev Module.
 
 ---
 
-## 🔄 Cloud Synchronization Architecture
+## 🔄 Cloud Synchronization Workflow
 
-The system uses a custom streaming protocol to upload logs from the ESP32 to the cloud without exhausting the device's limited RAM:
-1. **Collection**: Attendance is logged locally to `/attendance.csv` on the SD Card.
-2. **Authorization**: Device authenticates via a unique `x-device-key` header.
-3. **Streaming**: Files are streamed directly from SD to the `/api/sync/hardware` endpoint.
-4. **Validation**: Upon successful 200 OK, the device clears the local cache to prevent duplicates.
+AttendClass uses an efficient, low-RAM streaming protocol for hardware-to-cloud sync:
+1. **Logging**: Hardware writes attendance entries to `attendance.csv` on the SD Card.
+2. **Sync Mode**: Triggered via the Master Card admin menu (4 taps).
+3. **Ingestion**: The ESP32 posts the raw CSV to the `/hardware-sync` Edge Function.
+4. **Processing**: The cloud function parses data, validates the device key, and matches students to active course schedules based on WAT (UTC+1) time.
+5. **Confirmation**: Local logs are purged only after a successful 200 OK from the cloud.
 
 ---
 
 ## 📄 Documentation
-- [User Manual](User_Manual.md)
-- [System Architecture](README_SYSTEM.md) (if available)
+- [System Architecture](System_Architecture.md) - Deep dive into data flows and wiring.
+- [User Manual](User_Manual.md) - Guide for lecturers and course representatives.
 
 ---
-
-## 🤝 Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📜 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
