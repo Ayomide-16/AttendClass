@@ -28,7 +28,6 @@ jobs:
         working-directory: ./MobileApp
         run: |
           npm install --legacy-peer-deps
-          npm install -g expo-cli
 
       - name: Prebuild Expo
         working-directory: ./MobileApp
