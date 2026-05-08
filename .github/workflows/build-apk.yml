@@ -32,7 +32,9 @@ jobs:
 
       - name: Prebuild Expo
         working-directory: ./MobileApp
-        run: npx expo prebuild --platform android --no-interactive
+        env:
+          CI: 1
+        run: npx expo prebuild --platform android
 
       - name: Build Android Release
         working-directory: ./MobileApp/android
