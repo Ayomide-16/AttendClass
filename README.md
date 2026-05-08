@@ -54,7 +54,6 @@
 | `ESP32_Firmware/` | ESP32 C++/Arduino firmware and libraries. |
 | `WebApp/` | TanStack-powered React frontend & Express backend. |
 | `MobileApp/` | (Work in Progress) Mobile companion application. |
-| `docs/` | System diagrams, manuals, and assets. |
 
 ---
 
